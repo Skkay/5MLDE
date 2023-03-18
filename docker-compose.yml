@@ -1,0 +1,16 @@
+version: '3'
+
+services:
+  mlflow:
+    build:
+      context: ./docker/mlflow
+      dockerfile: Dockerfile
+    container_name: mlflow
+    restart: always
+    ports:
+      - 5000:5000
+    volumes:
+      - mlflow:/mlflow
+
+volumes:
+  mlflow:
