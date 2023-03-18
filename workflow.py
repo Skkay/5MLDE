@@ -4,10 +4,13 @@ import requests
 import pandas as pd
 import numpy as np
 import pickle
+import mlflow
 
 from prefect import task, flow
 from sklearn.linear_model import LinearRegression
 from sklearn.metrics import mean_squared_error
+
+mlflow.set_tracking_uri("http://localhost:5000")
 
 
 @task()
@@ -98,9 +101,18 @@ def extract_X_y(df):
 def train_and_predict(X_train, y_train, X_test, y_test) -> dict:
     """Train model, predict values and calculate error"""
 
-    model = train_model(X_train, y_train)
-    prediction = predict(model, X_test)
-    mse = evaluate_model(y_test, prediction)
+    with mlflow.start_run() as run:
+        model = train_model(X_train, y_train)
+        prediction = predict(model, X_test)
+        mse = evaluate_model(y_test, prediction)
+
+        mlflow.log_param('train_set_size', X_train.shape[0])
+        mlflow.log_param('test_set_size', X_test.shape[0])
+        mlflow.log_metric('test_mse', mse)
+
+        mlflow.sklearn.log_model(model, 'model')
+
+        mlflow.register_model(f'runs:/{run.info.run_id}/model', 'linear_regression')
 
     return {
         'model': model,
@@ -168,3 +180,7 @@ def batch_inference(data, model=None):
     predictions = predict(model, X)
 
     return [round(v) for v in predictions]
+
+
+if __name__ == '__main__':
+    complete_ml(config.DATA_URL)
