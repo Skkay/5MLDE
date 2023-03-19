@@ -19,7 +19,7 @@ async def root():
 @app.get('/seven-days-forecast')
 async def seven_days_forecast():
     today = datetime.today().date()
-    dates = [today + timedelta(days=i) for i in range(7)]
+    dates = [today + timedelta(days=i) for i in range(1, 8)]
 
     X = pd.DataFrame({
         'year': [date.year for date in dates],
