@@ -27,8 +27,14 @@ async def seven_days_forecast():
         'day': [date.day for date in dates]
     })
 
-    predictions = pipeline.predict(X)
+    predictions = [round(pred) for pred in pipeline.predict(X)]
 
-    return {
-        'seven_days_forecast': [round(v) for v in predictions],
-    }
+    response = []
+    for date, prediction in zip(dates, predictions):
+        response.append({
+            'datetime': date.strftime('%Y-%m-%dT%H:%M:%S+00:00'),
+            'prediction_rateTenth': prediction,
+            'prediction_rate': prediction / 10,
+        })
+
+    return response
