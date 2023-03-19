@@ -2,11 +2,10 @@ version: '3'
 
 services:
   mlflow:
-    build:
-      context: ./docker/mlflow
-      dockerfile: Dockerfile
+    image: ghcr.io/mlflow/mlflow:v2.1.1
     container_name: mlflow
     restart: always
+    command: mlflow server --backend-store-uri sqlite:////mlflow/mlflow.db --default-artifact-root /mlflow/artifacts --artifacts-destination /mlflow/artifacts --host 0.0.0.0
     ports:
       - 5000:5000
     volumes:
