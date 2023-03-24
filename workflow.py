@@ -9,7 +9,7 @@ from prefect import task, flow
 from sklearn.linear_model import LinearRegression
 from sklearn.metrics import mean_squared_error
 
-mlflow.set_tracking_uri("http://localhost:5000")
+mlflow.set_tracking_uri("http://mlflow:5000")
 
 
 @task()
