@@ -3,4 +3,4 @@ __pycache__/
 *$py.class
 
 venv/
-model.pkl
+flows/*-deployment.yaml
