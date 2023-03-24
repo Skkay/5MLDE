@@ -34,7 +34,12 @@ services:
     image: prefecthq/prefect:2.8.0-python3.10
     container_name: prefect-agent
     restart: always
-    command: prefect agent start --pool default-agent-pool --work-queue default
+    command: >
+      bash -c "pip install -r /requirements.txt
+      && prefect agent start --pool default-agent-pool --work-queue default"
+    volumes:
+      - ./flows:/root/flows
+      - ./requirements.txt:/requirements.txt
     environment:
       - PREFECT_API_URL=http://prefect-server:4200/api
 
