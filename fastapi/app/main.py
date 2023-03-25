@@ -1,10 +1,20 @@
+import os
 import mlflow
 import pandas as pd
 from fastapi import FastAPI
 from datetime import datetime, timedelta
 
-mlflow.set_tracking_uri("http://mlflow:5000")
-pipeline = mlflow.pyfunc.load_model(model_uri='models:/linear_regression/production')
+MLFLOW_URI = os.environ.get('MLFLOW_URI')
+MODEL_URI = os.environ.get('MODEL_URI')
+
+if MLFLOW_URI == None:
+    raise Exception('MLFLOW_URI is not defined')
+
+if MODEL_URI == None:
+    raise Exception('MODEL_URI is not defined')
+
+mlflow.set_tracking_uri(MLFLOW_URI)
+pipeline = mlflow.pyfunc.load_model(model_uri=MODEL_URI)
 
 app = FastAPI()
 

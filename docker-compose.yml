@@ -77,6 +77,9 @@ services:
       - 8080:80
     volumes:
       - mlflow:/mlflow
+    environment:
+      - MLFLOW_URI=http://mlflow:5000
+      - MODEL_URI=models:/linear_regression/production
 
 volumes:
   mlflow:
