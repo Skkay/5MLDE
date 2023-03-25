@@ -3,7 +3,6 @@ import config
 import requests
 import pandas as pd
 import numpy as np
-import pickle
 import mlflow
 
 from prefect import task, flow
@@ -71,23 +70,6 @@ def evaluate_model(y_true: np.ndarray, y_pred: np.ndarray) -> float:
 
 
 @task()
-def load_pickle(path: str):
-    """Load a pickle file"""
-
-    with open(path, 'rb') as f:
-        loaded_obj = pickle.load(f)
-    return loaded_obj
-
-
-@task()
-def save_pickle(path: str, obj: dict):
-    """Save a pickle file"""
-
-    with open(path, 'wb') as f:
-        pickle.dump(obj, f)
-
-
-@task()
 def extract_X_y(df):
     """Extract X and y from a DataFrame"""
 
@@ -135,7 +117,7 @@ def build_new_data(data):
 
 
 @flow()
-def complete_ml(url: str, save_model: bool = True):
+def complete_ml(url: str):
     """Complete ML pipeline"""
 
     # Download data from URL
@@ -159,10 +141,6 @@ def complete_ml(url: str, save_model: bool = True):
     results = train_and_predict(X_train, y_train, x_test, y_test)
     print(f'MSE: {results["mse"]:.2f}')
 
-    # Save model
-    # if save_model:
-    #     save_pickle(f'{config.LOCAL_STORAGE}/model.pkl', results)
-
     return results
 
 
@@ -174,13 +152,6 @@ def batch_inference(data, model=None):
     df = preprocess_data(df)
     X, _ = extract_X_y(df)
 
-    # if not model:
-    #     model = load_pickle(f'{config.LOCAL_STORAGE}/model.pkl')['model']
-
     predictions = predict(model, X)
 
     return [round(v) for v in predictions]
-
-
-if __name__ == '__main__':
-    complete_ml(config.DATA_URL)
