@@ -67,6 +67,17 @@ services:
     volumes:
       - mlflow:/mlflow
 
+  api:
+    build: ./fastapi
+    container_name: api
+    restart: always
+    depends_on:
+      - mlflow
+    ports:
+      - 8080:80
+    volumes:
+      - mlflow:/mlflow
+
 volumes:
   mlflow:
   database:

@@ -3,7 +3,7 @@ import pandas as pd
 from fastapi import FastAPI
 from datetime import datetime, timedelta
 
-mlflow.set_tracking_uri("http://localhost:5000")
+mlflow.set_tracking_uri("http://mlflow:5000")
 pipeline = mlflow.pyfunc.load_model(model_uri='models:/linear_regression/production')
 
 app = FastAPI()
