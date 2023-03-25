@@ -40,6 +40,7 @@ services:
     volumes:
       - ./flows:/root/flows
       - ./requirements.txt:/requirements.txt
+      - mlflow:/mlflow
     environment:
       - PREFECT_API_URL=http://prefect-server:4200/api
 
