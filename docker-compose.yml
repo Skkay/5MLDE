@@ -80,6 +80,15 @@ services:
     environment:
       - MLFLOW_URI=http://mlflow:5000
       - MODEL_URI=models:/linear_regression/production
+  
+  app:
+    image: httpd
+    container_name: app
+    restart: always
+    volumes:
+      - ./frontend/app:/usr/local/apache2/htdocs
+    ports:
+      - 3000:80
 
 volumes:
   mlflow:
