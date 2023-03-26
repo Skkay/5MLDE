@@ -35,11 +35,10 @@ services:
     container_name: prefect-agent
     restart: always
     command: >
-      bash -c "pip install -r /requirements.txt
+      bash -c "pip install -r /root/flows/requirements.txt
       && prefect agent start --pool default-agent-pool --work-queue default"
     volumes:
       - ./flows:/root/flows
-      - ./requirements.txt:/requirements.txt
       - mlflow:/mlflow
     environment:
       - PREFECT_API_URL=http://prefect-server:4200/api
@@ -48,12 +47,11 @@ services:
     image: prefecthq/prefect:2.8.0-python3.10
     container_name: prefect-cli
     command: >
-      bash -c "pip install -r /requirements.txt
+      bash -c "pip install -r /root/flows/requirements.txt
       && tail -f /dev/null"
     working_dir: /root/flows
     volumes:
       - ./flows:/root/flows
-      - ./requirements.txt:/requirements.txt
     environment:
       - PREFECT_API_URL=http://prefect-server:4200/api
 
