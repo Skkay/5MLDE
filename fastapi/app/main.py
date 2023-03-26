@@ -2,6 +2,7 @@ import os
 import mlflow
 import pandas as pd
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 from datetime import datetime, timedelta
 
 MLFLOW_URI = os.environ.get('MLFLOW_URI')
@@ -17,6 +18,14 @@ mlflow.set_tracking_uri(MLFLOW_URI)
 pipeline = mlflow.pyfunc.load_model(model_uri=MODEL_URI)
 
 app = FastAPI()
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=['*'],
+    allow_credentials=True,
+    allow_methods=['*'],
+    allow_headers=['*'],
+)
 
 
 @app.get('/')
