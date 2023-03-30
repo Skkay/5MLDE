@@ -15,7 +15,13 @@ if MODEL_URI == None:
     raise Exception('MODEL_URI is not defined')
 
 mlflow.set_tracking_uri(MLFLOW_URI)
-pipeline = mlflow.pyfunc.load_model(model_uri=MODEL_URI)
+
+try:
+    pipeline = mlflow.pyfunc.load_model(model_uri=MODEL_URI)
+except mlflow.exceptions.RestException as e:
+    print('Error: {}'.format(e))
+    print('You should run the workflow first to train and register the model.')
+    exit(1)
 
 app = FastAPI()
 
