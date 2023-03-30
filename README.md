@@ -62,6 +62,8 @@ With the <u>docker-compose.yml</u> unchanged:
 - The API is on port *8080*
 - The web app is on port *3000*
 
+*Note:* The `api` container may not start the first time, until a first workflow has been run.
+
 ## Run
 
 ### Prefect
@@ -85,6 +87,12 @@ docker exec prefect-cli \
 	workflow.py:complete_ml
 ```
 
+<details>
+    <summary><i>Windows CMD</i></summary>
+
+    docker exec prefect-cli prefect deployment build --name my_flow --pool default-agent-pool --work-queue default --skip-upload --params="{\"url\":\"https://ogrine-rates.skkay.fr/ogrineRates?sort=desc\"}" --cron "0 1 * * 1" workflow.py:complete_ml
+</details>
+
 The file `./flows/complete_ml-deployment.yaml` should be created.
 
 More info at https://docs.prefect.io/concepts/deployments/#build-the-deployment.
@@ -98,6 +106,12 @@ More info at https://docs.prefect.io/concepts/deployments/#build-the-deployment.
 docker exec prefect-cli \
 	prefect deployment apply complete_ml-deployment.yaml
 ```
+
+<details>
+    <summary><i>Windows CMD</i></summary>
+
+    docker exec prefect-cli prefect deployment apply complete_ml-deployment.yaml
+</details>
 
 More info at https://docs.prefect.io/concepts/deployments/#create-a-deployment.
 
@@ -134,6 +148,7 @@ Nothing to do. The **straight line** is the price over the time and the **dot li
 - Use [Great Expectations](https://greatexpectations.io) to validate incoming data and ensure that they are conform during the train/test phase.
 - Use a custom Prefect Docker image (for *prefect-agent* and *prefect-cli*) and install Python requirements to it, instead of runing `pip install` at every `docker compose up`.
 - Automatically define latest models as *Production*.
+- Use environment variables instead of a config file to run `./flows/workflow.py`.
 
 ## Extra
 - The "external API" repository: https://github.com/Skkay/Ogrine-Rates_Server
