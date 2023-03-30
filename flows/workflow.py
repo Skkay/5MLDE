@@ -102,20 +102,6 @@ def train_and_predict(X_train, y_train, X_test, y_test) -> dict:
     }
 
 
-@task()
-def build_new_data(data):
-    res = []
-    for d in data:
-        res.append({
-            'id': None,
-            'datetime': d,
-            'rate': None,
-            'rateTenth': None,
-        })
-
-    return res
-
-
 @flow()
 def complete_ml(url: str):
     """Complete ML pipeline"""
@@ -142,16 +128,3 @@ def complete_ml(url: str):
     print(f'MSE: {results["mse"]:.2f}')
 
     return results
-
-
-@flow()
-def batch_inference(data, model=None):
-    data = build_new_data(data)
-
-    df = load_data(data)
-    df = preprocess_data(df)
-    X, _ = extract_X_y(df)
-
-    predictions = predict(model, X)
-
-    return [round(v) for v in predictions]
